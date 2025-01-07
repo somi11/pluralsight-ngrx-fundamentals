@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { sumProducts } from 'src/app/utils/sum-products';
 import { Product } from '../product.model';
 import { ProductsService } from '../products.service';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-products-page',
@@ -15,7 +16,9 @@ export class ProductsPageComponent {
   showProductCode = false;
   errorMessage = '';
 
-  constructor(private productsService: ProductsService) {}
+  constructor(private productsService: ProductsService , private store : Store) {
+    this.store.subscribe((store) => console.log(store))
+  }
 
   ngOnInit() {
     this.getProducts();
