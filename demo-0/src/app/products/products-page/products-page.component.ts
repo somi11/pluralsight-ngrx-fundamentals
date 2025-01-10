@@ -4,6 +4,7 @@ import { Product } from '../product.model';
 import { ProductsService } from '../products.service';
 import { Store } from '@ngrx/store';
 
+
 @Component({
   selector: 'app-products-page',
   templateUrl: './products-page.component.html',
@@ -13,7 +14,8 @@ export class ProductsPageComponent {
   products: Product[] = [];
   total = 0;
   loading = true;
-  showProductCode = false;
+  showProductCode$ = this.store.select((state : any) => state.products.showProductCode);
+  //showProductCode = true;
   errorMessage = '';
 
   constructor(private productsService: ProductsService , private store : Store) {
@@ -36,6 +38,7 @@ export class ProductsPageComponent {
   }
 
   toggleShowProductCode() {
-    this.showProductCode = !this.showProductCode;
+    //this.showProductCode = !this.showProductCode;
+    this.store.dispatch({type : '[Products Page] Toggle  show Product Code'})
   }
 }
