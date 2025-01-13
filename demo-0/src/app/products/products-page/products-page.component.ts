@@ -3,6 +3,7 @@ import { sumProducts } from 'src/app/utils/sum-products';
 import { Product } from '../product.model';
 import { ProductsService } from '../products.service';
 import { Store } from '@ngrx/store';
+import { ProductsApiActions, ProductsPageActions } from '../state/products.actions';
 
 
 @Component({
@@ -11,9 +12,9 @@ import { Store } from '@ngrx/store';
   styleUrls: ['./products-page.component.css'],
 })
 export class ProductsPageComponent {
-  products: Product[] = [];
+  products$ = this.store.select((state : any) => state.products.products)
   total = 0;
-  loading = true;
+  loading$ = this.store.select((state : any) => state.products.loading);
   showProductCode$ = this.store.select((state : any) => state.products.showProductCode);
   //showProductCode = true;
   errorMessage = '';
@@ -27,11 +28,12 @@ export class ProductsPageComponent {
   }
 
   getProducts() {
+    this.store.dispatch(ProductsPageActions.loadProducts())
     this.productsService.getAll().subscribe({
       next: (products) => {
-        this.products = products;
+       this.store.dispatch(ProductsApiActions.productLoadedSuccess({products}))
         this.total = sumProducts(products);
-        this.loading = false;
+     
       },
       error: (error) => (this.errorMessage = error),
     });
@@ -39,6 +41,6 @@ export class ProductsPageComponent {
 
   toggleShowProductCode() {
     //this.showProductCode = !this.showProductCode;
-    this.store.dispatch({type : '[Products Page] Toggle  show Product Code'})
-  }
+    this.store.dispatch(ProductsPageActions.toggleShowProductCode());
+}
 }
