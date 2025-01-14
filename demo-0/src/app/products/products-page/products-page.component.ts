@@ -4,6 +4,7 @@ import { Product } from '../product.model';
 import { ProductsService } from '../products.service';
 import { Store } from '@ngrx/store';
 import { ProductsApiActions, ProductsPageActions } from '../state/products.actions';
+import { selectProducts, selectProductsLoading, selectProductsShowProductCode, selectProductsTotal } from '../state/products.selectors';
 
 
 @Component({
@@ -12,10 +13,10 @@ import { ProductsApiActions, ProductsPageActions } from '../state/products.actio
   styleUrls: ['./products-page.component.css'],
 })
 export class ProductsPageComponent {
-  products$ = this.store.select((state : any) => state.products.products)
-  total = 0;
-  loading$ = this.store.select((state : any) => state.products.loading);
-  showProductCode$ = this.store.select((state : any) => state.products.showProductCode);
+  products$ = this.store.select(selectProducts)
+  total = this.store.select(selectProductsTotal);
+  loading$ = this.store.select(selectProductsLoading);
+  showProductCode$ = this.store.select(selectProductsShowProductCode);
   //showProductCode = true;
   errorMessage = '';
 
@@ -25,14 +26,14 @@ export class ProductsPageComponent {
 
   ngOnInit() {
     this.getProducts();
-  }
+     }
 
   getProducts() {
     this.store.dispatch(ProductsPageActions.loadProducts())
     this.productsService.getAll().subscribe({
       next: (products) => {
        this.store.dispatch(ProductsApiActions.productLoadedSuccess({products}))
-        this.total = sumProducts(products);
+       
      
       },
       error: (error) => (this.errorMessage = error),

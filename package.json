@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@ngrx/effects": "^16.3.0",
     "@ngrx/store": "^16.0.0"
   }
 }
